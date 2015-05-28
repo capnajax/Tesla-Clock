@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>Tesla Clock Messages</title>
+		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script>
+			function message(msg) {
+				$.get('+'+msg);
+			}
+		</script>
+	</head>
+<body>
+	<p><a onclick="message('B')">Normal Operation</a></p>
+	<p><a onclick="message('M'+0x663333.toString())">Mood 332211</a></p>
+	<p><a onclick="message('M'+0x665544.toString())">Mood 665544</a></p>
+	<p><a onclick="message('M'+0x112233.toString())">Mood 112233</a></p>
+	<p><a onclick="message('M'+0x115566.toString())">Mood 115566</a></p>
+	<p><a onclick="message('M'+0xFF0000.toString())">Mood FF0000</a></p>
+	<p><a onclick="message('M'+0x00FF00.toString())">Mood 00FF00</a></p>
+	<p><a onclick="message('M'+0x0000FF.toString())">Mood 0000FF</a></p>
+	<p><a onclick="message('M'+0x888800.toString())">Mood 888800</a></p>
+	<p><a onclick="message('M'+0x880088.toString())">Mood 880088</a></p>
+	<p><a onclick="message('P0')">Photo 1</a></p>
+	<p><a onclick="message('P1')">Photo 2</a></p>
+	<p><a onclick="message('P2')">Photo 3</a></p>
+	<p><a onclick="message('WR')">Rain</a></p>
+	<p><a onclick="message('WA')">Weather Alert</a></p>
+	<p><a onclick="message('WW')">Weather Warning</a></p>
+	<p><a onclick="message('T')">Set time</a></p>
+	<p><a onclick="message('S')">Status</a></p>
+</body>
