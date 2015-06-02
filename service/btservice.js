@@ -154,6 +154,15 @@ function Comm() {
 		});
 	};
 
+	this.level = function() {
+		console.log("sending L:");
+		command = {
+			name: 'L',
+			time: new Date()
+		}
+		this.sendCommand(command);
+	};
+
 	this.setTime = function() {
 		var now = new Date(),
 	    	midnight = new Date(

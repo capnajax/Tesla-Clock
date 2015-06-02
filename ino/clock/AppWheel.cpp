@@ -23,7 +23,7 @@ void ArtificialHorizon::setLevel(int16_t newLevel) {
 color_t ArtificialHorizon::calculate(int dial) {
 
     int lowerHalfStart, lowerHalfEnd,
-    	levelSet = level + LEVELER_OFFSET;
+    	levelSet = level;
 
     if(dial < 24) {
 

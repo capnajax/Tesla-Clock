@@ -12,8 +12,8 @@
 #define NEOPIXEL_PIN 4
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-#define LEVEL_OFFSET 255
-#define LEVEL_TIME 15000
+#define LEVEL_OFFSET 105
+#define LEVEL_TIME 60000
 
 uint32_t startTime = 0; // millis last midnight
 int16_t level = 0; // horizontal acceleration (x10)
@@ -90,7 +90,7 @@ void loop () {
     switch(command.command) {
     
     case 'T': // time since midnight
-        startTime = (command.uint32Param - millis()) % 86400000;
+        startTime = (86400000 + command.uint32Param - (millis()%86400000)) % 86400000;
         break;
 
     case 'M': // adjust mood
@@ -102,6 +102,11 @@ void loop () {
 
     case 'B': // "bright" -- aka normal operation
         fadeIn(&wheelBright, FADE_SLOW_TIME, time);
+        break;
+
+    case 'L': // "bright" -- aka normal operation
+        fadeIn(&artificialHorizon, FADE_SLOW_TIME, time);
+        bumpTime = time;
         break;
 
     case 'W': // weather - next char can be A(lert), W(arning), or R(ain)
@@ -144,17 +149,14 @@ void loop () {
 
     if(abs(level) > 1000) {
         if(0 == bumpTime) {
-            Serial.println("S leveling");
             if(&artificialHorizon != currentWheel) {
                 fadeIn(&artificialHorizon, FADE_QUICK_TIME, time);
             }
         }
-        Serial.println("S bump");
         bumpTime = time;
     }
 
     if(currentWheel == &artificialHorizon && bumpTime + LEVEL_TIME < time) {
-        Serial.println("S done leveling");
         fadeIn(&wheelBright, FADE_SLOW_TIME, time);
     }
 
@@ -164,7 +166,7 @@ void loop () {
         bumpTime = 0;
     } else {
         // we're still in leveler mode, so report the current level
-        artificialHorizon.setLevel(level);
+        artificialHorizon.setLevel(level + LEVEL_OFFSET);
     }
 
 

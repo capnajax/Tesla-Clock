@@ -1,24 +1,39 @@
 #!/usr/local/bin/node
 
 var http = require('http'),
-	comm,
+	comm = new (require('./btservice'))(),
 	stringify = require('json-stringify-safe'),
 	fs = require('fs'),
 	_ = require('lodash'),
 	photos = require('./photos'),
-	images = [];
+	images = [],
 
-console.log(JSON.stringify(process.argv));
+	commandMap = {
+		'B': 	function() { 
+					comm.startNormalProgram();
+				},
+		'L': 	function() {
+					comm.level();
+				}, 
+		'M': 	function(parmString) {
+					comm.setMood(parseInt(parmString));
+				},
+		'P':  	function(parmString) {
+					comm.sendPhoto(images[parmString.charAt(0)]);
+				},
+		'S': 	function() { 
+					comm.getStatus();
+				},
+		'T': 	function() { 
+					comm.setTime();
+				},
+		'W': 	function(parmString) {
+					comm.weather(parmString.charAt(0));
+				}
+	};
 
-if(-1 != _.indexOf(process.argv, "-serial")) {
-	comm = new (require('./serialservice'))();
-} else if(-1 != _.indexOf(process.argv, "-nullcomm")) {
-	comm = new (require('./nullcomm'))();
-} else {
-	comm = new (require('./btservice'))();
-}
+
 comm.setup();
-
 
 (function() {
 	var imagesLoaded = 0,
@@ -43,7 +58,6 @@ comm.setup();
 		imagesLoaded++;
 	})
 })();
-	
 
 // 
 // service
@@ -54,26 +68,18 @@ comm.setup();
 		if(request.url) {
 			var index = request.url.indexOf('+');
 			if(-1 != index && request.url.length > index+1) {
-				var message = request.url.substring(index+1);
+				var message = request.url.substring(index+1),
+					command = commandMap[message.charAt(0)];
 
-				if(message.charAt(0)=='B') {
-					comm.startNormalProgram();
-				} else if(message.charAt(0)=='S') {
-					comm.getStatus();
-				} else if(message.charAt(0)=='T') {
-					comm.setTime();
-				} else if(message.charAt(0)=='M') {
-					comm.setMood(parseInt(message.substring(1)));
-				} else if(message.charAt(0)=='W') {
-					comm.weather(message.charAt(1));
-				} else if(message.charAt(0)=='P') {
-					comm.sendPhoto(images[message.charAt(1)]);
+				if(command) {
+					command(message.substring(1));
+					response.writeHead(200, {"Content-Type": "text/plain"});
+					response.end("OK .");
 				} else {
-// TODO re-implement!
-//					comm.sendMessage(message);
+					response.writeHead(404, "Message type '" + message.charAt(0) + "' not known");
+					console.log("unknown message'" + message.charAt(0) + "', 404 sent");
 				}
-				response.writeHead(200, {"Content-Type": "text/plain"});
-				response.end("OK .");
+
 			} else {
 				response.end(serviceHTML);
 			}

@@ -88,6 +88,7 @@ command_t BluetoothComms::command() {
 			command.command = 'N';
 			break;
 		case 'B':
+		case 'L':
 			// normal operation
 			break;
 		// TODO how to handle K and F?

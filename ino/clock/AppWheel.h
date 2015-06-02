@@ -4,8 +4,6 @@
 
 #include "Wheel.h"
 
-#define LEVELER_OFFSET (12) // how far off level the leveler gets
-
 class Photo: public Wheel {
 
 public:
