@@ -189,7 +189,6 @@ void loop () {
     // now check the fade
     if(currentWheel == &blendWheel) {
         if(blendWheel.fadeComplete()) {
-            Serial.write("S fc\n");
             currentWheel = blendWheel.getWheel2();
         }
     }
